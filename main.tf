@@ -29,21 +29,21 @@ resource "aws_route_table_association" "public_subnet1_association" {
   route_table_id = aws_route_table.public_subnet1_route_table.id
 }
 
-resource "aws_security_group" "allow_8080" {
-  name        = "allow_8080"
-  description = "allow all traffic from port 8080"
+resource "aws_security_group" "allow_server_port" {
+  name        = "allow_server_port"
+  description = "allow all traffic from server port"
   vpc_id      = aws_vpc.terraform_vpc.id
 
   ingress {
-    description = "All traffic from port 8080"
-    from_port   = 8080
-    to_port     = 8080
+    description = "All traffic from server_port"
+    from_port   = var.server_port
+    to_port     = var.server_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    description = "All traffic to port 0"
+    description = "All outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -70,6 +70,12 @@ data "aws_key_pair" "terrafrom_key" {
   include_public_key = true
 }
 
+variable "server_port" {
+  description = "server port number"
+  type        = number
+  default     = 8080
+}
+
 resource "aws_instance" "example" {
   ami                         = "ami-0c9c942bd7bf113a2"
   instance_type               = "t3.nano"
@@ -80,7 +86,7 @@ resource "aws_instance" "example" {
   user_data                   = <<-EOF
                                 #!/bin/bash
                                 echo "Hello, World" > index.html
-                                nohup busybox httpd -f -p 8080 &
+                                nohup busybox httpd -f -p ${var.server_port} &
                                 EOF
   user_data_replace_on_change = true
   tags = {
