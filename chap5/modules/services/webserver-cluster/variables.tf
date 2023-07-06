@@ -23,6 +23,11 @@ variable "max_size" {
   type        = number
 }
 
+variable "enable_autoscaling" {
+  description = "If set to true, enable autoscaling"
+  type        = bool
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.

@@ -55,6 +55,31 @@ resource "aws_autoscaling_group" "example" {
   }
 }
 
+
+resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
+  count = var.enable_autoscaling ? 1 : 0
+
+  scheduled_action_name = "scale-out-during-business-hours"
+  min_size              = 2
+  max_size              = 3
+  desired_capacity      = 3
+  recurrence            = "0 9 * * *"
+
+  autoscaling_group_name = module.webserver_cluster.asg_name
+}
+
+resource "aws_autoscaling_schedule" "scale_in_at_night" {
+  count = var.enable_autoscaling ? 1 : 0
+
+  scheduled_action_name = "scale-in-at-night"
+  min_size              = 1
+  max_size              = 1
+  desired_capacity      = 1
+  recurrence            = "0 17 * * *"
+
+  autoscaling_group_name = module.webserver_cluster.asg_name
+}
+
 resource "aws_security_group" "instance" {
   name   = "${var.cluster_name}-instance"
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id

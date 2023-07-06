@@ -19,3 +19,9 @@ variable "hero_thousand_faces" {
     "morpheus" = "mentor"
   }
 }
+
+variable "give_neo_cloudwatch_full_access" {
+  description = "Give neo cloudwatch full access"
+  type        = bool
+  default     = false
+}

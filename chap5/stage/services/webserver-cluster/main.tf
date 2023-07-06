@@ -25,9 +25,10 @@ module "webserver_cluster" {
 
   cluster_name = var.cluster_name
 
-  instance_type = "t3.nano"
-  min_size      = 1
-  max_size      = 2
+  instance_type      = "t3.nano"
+  min_size           = 1
+  max_size           = 2
+  enable_autoscaling = false
 
   custom_tags = {
     Owner     = "team-foo"
