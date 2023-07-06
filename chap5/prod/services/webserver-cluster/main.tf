@@ -11,6 +11,13 @@ terraform {
 
 provider "aws" {
   region = "ap-northeast-2"
+
+  default_tags {
+    tags = {
+      Owner     = "team-foo"
+      ManagedBy = "terraform"
+    }
+  }
 }
 
 module "webserver_cluster" {
@@ -21,6 +28,11 @@ module "webserver_cluster" {
   instance_type = "t3.nano"
   min_size      = 2
   max_size      = 3
+
+  custom_tags = {
+    Owner     = "team-foo"
+    ManagedBy = "terraform"
+  }
 }
 
 resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {

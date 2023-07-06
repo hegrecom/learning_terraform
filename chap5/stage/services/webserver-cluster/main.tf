@@ -11,6 +11,13 @@ terraform {
 
 provider "aws" {
   region = "ap-northeast-2"
+
+  default_tags {
+    tags = {
+      Owner     = "team-foo"
+      ManagedBy = "terraform"
+    }
+  }
 }
 
 module "webserver_cluster" {
@@ -21,6 +28,11 @@ module "webserver_cluster" {
   instance_type = "t3.nano"
   min_size      = 1
   max_size      = 2
+
+  custom_tags = {
+    Owner     = "team-foo"
+    ManagedBy = "terraform"
+  }
 }
 
 resource "aws_security_group_rule" "allow_testing_inbound" {
